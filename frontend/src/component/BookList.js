@@ -18,6 +18,15 @@ const BookList = () => {
       .catch((e) => console.log(e));
   }
 
+  function deleteBookById(id) {
+    BookService.deleteBook(id)
+      .then(() => {
+        console.log("delete successfully");
+        getAllBooks();
+      })
+      .catch((e) => console.log(e));
+  }
+
   return (
     <div className="container">
       <Link to={"/add-book"} className="btn btn-primary mb-2 mt-3" href="#">
@@ -41,7 +50,12 @@ const BookList = () => {
                 <Link to={`/books/${book.id}`} className="btn btn-info">
                   Update
                 </Link>
-                <a className="btn btn-danger">Delete</a>
+                <a
+                  className="btn btn-danger"
+                  onClick={() => deleteBookById(book.id)}
+                >
+                  Delete
+                </a>
               </td>
             </tr>
           ))}

@@ -22,6 +22,10 @@ class BookService {
   patchUpdate(id, bookData) {
     return axios.patch(`${BASE_URL}/${id}`, bookData);
   }
+
+  deleteBook(id) {
+    return axios.delete(`${BASE_URL}/${id}`);
+  }
 }
 
 export default new BookService();
