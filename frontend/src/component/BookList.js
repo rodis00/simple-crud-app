@@ -32,35 +32,43 @@ const BookList = () => {
       <Link to={"/add-book"} className="btn btn-primary mb-2 mt-3" href="#">
         Add Book
       </Link>
-      <h2 className="text-center mb-4">Book List</h2>
-      <table className="table table-bordered table striped">
-        <thead>
-          <th>Book ID</th>
-          <th>Book Title</th>
-          <th>Book Raiting</th>
-          <th>Actions</th>
-        </thead>
-        <tbody>
-          {books.map((book) => (
-            <tr id={book.id}>
-              <td>{book.id}</td>
-              <td>{book.title}</td>
-              <td>{book.rating}</td>
-              <td>
-                <Link to={`/books/${book.id}`} className="btn btn-info">
-                  Update
-                </Link>
-                <a
-                  className="btn btn-danger"
-                  onClick={() => deleteBookById(book.id)}
-                >
-                  Delete
-                </a>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {books.length > 0 ? (
+        <>
+          <h2 className="text-center mb-4">Book List</h2>
+          <table className="table table-bordered table striped">
+            <thead>
+              <th>Book ID</th>
+              <th>Book Title</th>
+              <th>Book Raiting</th>
+              <th>Actions</th>
+            </thead>
+            <tbody>
+              {books.map((book) => (
+                <tr id={book.id}>
+                  <td>{book.id}</td>
+                  <td>{book.title}</td>
+                  <td>{book.rating}</td>
+                  <td>
+                    <Link to={`/books/${book.id}`} className="btn btn-info">
+                      Update
+                    </Link>
+                    <a
+                      className="btn btn-danger"
+                      onClick={() => deleteBookById(book.id)}
+                    >
+                      Delete
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      ) : (
+        <div className="container text-center">
+          <h3>No data to display.</h3>
+        </div>
+      )}
     </div>
   );
 };
