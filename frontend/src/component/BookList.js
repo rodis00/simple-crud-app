@@ -38,7 +38,9 @@ const BookList = () => {
               <td>{book.title}</td>
               <td>{book.rating}</td>
               <td>
-                <a className="btn btn-info">Update</a>
+                <Link to={`/books/${book.id}`} className="btn btn-info">
+                  Update
+                </Link>
                 <a className="btn btn-danger">Delete</a>
               </td>
             </tr>

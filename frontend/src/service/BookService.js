@@ -10,6 +10,18 @@ class BookService {
   addBook(bookData) {
     return axios.post(BASE_URL + "/" + "add-book", bookData);
   }
+
+  getBookById(id) {
+    return axios.get(`${BASE_URL}/${id}`);
+  }
+
+  updateBook(id, bookData) {
+    return axios.put(`${BASE_URL}/${id}`, bookData);
+  }
+
+  patchUpdate(id, bookData) {
+    return axios.patch(`${BASE_URL}/${id}`, bookData);
+  }
 }
 
 export default new BookService();
