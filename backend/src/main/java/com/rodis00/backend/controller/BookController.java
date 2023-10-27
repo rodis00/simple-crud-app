@@ -3,6 +3,7 @@ package com.rodis00.backend.controller;
 import com.rodis00.backend.exception.BookNotFoundException;
 import com.rodis00.backend.model.Book;
 import com.rodis00.backend.service.BookService;
+import com.rodis00.backend.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,9 @@ import java.util.List;
 public class BookController {
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @PostMapping("/add-book")
     public ResponseEntity<Book> saveBook(@RequestBody Book book) {
@@ -84,6 +88,28 @@ public class BookController {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(e.getErrorDetails());
+        }
+    }
+
+    @GetMapping("/restricted-books")
+    public ResponseEntity<Object> getRestrictedBooks(@RequestHeader(name = "Authorization", required = false) String token) {
+        if (token == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized. Token required.");
+        else {
+            String realToken = token.substring(7);
+            String checkToken = jwtTokenUtil.validateToken(realToken);
+            if(checkToken.equalsIgnoreCase("valid")) {
+                List<String> restrictedBooks = List.of(
+                        "\"Magical Hieroglyphs and Logograms\" by Bathilda Bagshot",
+                        "Moste Potente Potions",
+                        "The Invisible Book of Invisibility",
+                        "\"Achievements in Charming\" by S. F. Newt",
+                        "\"Magical Theory\" by Adalbert Waffling"
+                );
+                return ResponseEntity.ok(restrictedBooks);
+            }
+            else
+                return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Dear Student, you are Unauthorized to be here :)");
         }
     }
 }
