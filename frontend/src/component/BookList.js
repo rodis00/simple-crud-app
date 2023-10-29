@@ -42,7 +42,7 @@ const BookList = () => {
             <>
               <h2 className="text-center mb-4">Book List</h2>
               <table className="table table-bordered table striped">
-                <thead>
+                <thead className="text-center">
                   <th>Book ID</th>
                   <th>Book Title</th>
                   <th>Book Raiting</th>
@@ -51,10 +51,10 @@ const BookList = () => {
                 <tbody>
                   {books.map((book) => (
                     <tr id={book.id}>
-                      <td>{book.id}</td>
+                      <td className="text-center">{book.id}</td>
                       <td>{book.title}</td>
-                      <td>{book.rating}</td>
-                      <td>
+                      <td className="text-center">{book.rating}</td>
+                      <td className="text-center">
                         <Link to={`/books/${book.id}`} className="btn btn-info">
                           Update
                         </Link>
