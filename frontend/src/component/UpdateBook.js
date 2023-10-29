@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import BookService from "../service/BookService";
+import Alert from "./Alert";
 
 const UpdateBook = () => {
   const [oldTitle, setOldTitle] = useState("");
@@ -9,6 +10,7 @@ const UpdateBook = () => {
   const [rating, setRating] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
+  const [showAlert, setShowAlert] = useState({});
 
   const bookData = { title, rating };
 
@@ -23,23 +25,44 @@ const UpdateBook = () => {
 
   function update(e) {
     e.preventDefault();
+
     let updatePromise;
-
-    if (bookData.title === "")
-      updatePromise = BookService.patchUpdate(id, { rating: bookData.rating });
-    else if (bookData.rating === "")
+    if (bookData.title === "") {
+      if (validateRating(bookData.rating)) {
+        updatePromise = BookService.patchUpdate(id, {
+          rating: bookData.rating,
+        });
+      } else {
+        setShowAlert({
+          isActive: true,
+          message: "Rating should be between 1 and 10.",
+        });
+        return;
+      }
+    } else if (bookData.rating === "") {
       updatePromise = BookService.patchUpdate(id, { title: bookData.title });
-    else updatePromise = BookService.updateBook(id, bookData);
+    } else {
+      if (validateRating(bookData.rating)) {
+        updatePromise = BookService.updateBook(id, bookData);
+      } else {
+        setShowAlert({
+          isActive: true,
+          message: "Rating should be between 1 and 10.",
+        });
+        return;
+      }
+    }
 
-    updatePromise
-      .then(() => {
-        console.log(updatePromise);
-        navigate("/");
-      })
-      .catch((e) => console.log(e));
+    updatePromise.then(() => navigate("/")).catch((e) => console.log(e));
   }
+
+  function validateRating(rating) {
+    return rating > 0 && rating < 11;
+  }
+
   return (
     <div>
+      {showAlert.isActive && <Alert message={showAlert.message} />}
       <div className="container mt-5">
         <div className="row">
           <div className="card col-md-6 offset-md-3">
@@ -61,6 +84,8 @@ const UpdateBook = () => {
                   <input
                     className="form-control"
                     type="number"
+                    min="1"
+                    max="10"
                     value={rating}
                     onChange={(e) => setRating(e.target.value)}
                     placeholder={oldRating}

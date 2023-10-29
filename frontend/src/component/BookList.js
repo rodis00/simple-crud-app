@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import BookService from "../service/BookService";
+import Alert from "./Alert";
 
 const BookList = () => {
   const [books, setBooks] = useState([]);
   const [networkError, setNetworkError] = useState("");
+  const [showAlert, setShowAlert] = useState({});
 
   useEffect(() => {
     getAllBooks();
@@ -27,12 +29,14 @@ const BookList = () => {
       .then(() => {
         console.log("delete successfully");
         getAllBooks();
+        setShowAlert({ isActive: true, message: "Book deleted." });
       })
       .catch((e) => console.log(e));
   }
 
   return (
     <div className="container">
+      {showAlert.isActive && <Alert message={showAlert.message} />}
       <Link to={"/add-book"} className="btn btn-primary mb-2 mt-3" href="#">
         Add Book
       </Link>

@@ -7,3 +7,10 @@
     bottom: 0;
     width: 100%;
 }
+
+.my-alert {
+    width: 40%;
+    margin-top: 2%;
+    margin-left: auto;
+    margin-right: auto;
+}
