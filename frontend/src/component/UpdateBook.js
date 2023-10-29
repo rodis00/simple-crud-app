@@ -3,35 +3,39 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import BookService from "../service/BookService";
 
 const UpdateBook = () => {
+  const [oldTitle, setOldTitle] = useState("");
+  const [oldRating, setOldRating] = useState("");
   const [title, setTitle] = useState("");
   const [rating, setRating] = useState("");
-  const [new_title, setNewTitle] = useState("");
-  const [new_rating, setNewRating] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const bookData = { new_title, new_rating };
-  const example_data = {
-    title: "test",
-    rating: 22,
-  };
+  const bookData = { title, rating };
 
   useEffect(() => {
     BookService.getBookById(id)
       .then((res) => {
-        setTitle(res.data.title);
-        setRating(res.data.rating);
+        setOldTitle(res.data.title);
+        setOldRating(res.data.rating);
       })
       .catch((e) => console.log(e));
   }, []);
 
-  // TODO: update method send empty data
   function update(e) {
     e.preventDefault();
-    console.log("rating: " + rating + "\ntitle: " + title);
-    console.log("new_rating: " + new_rating + "\nnew_title: " + new_title);
-    BookService.updateBook(id, example_data)
-      .then((res) => console.log(res))
+    let updatePromise;
+
+    if (bookData.title === "")
+      updatePromise = BookService.patchUpdate(id, { rating: bookData.rating });
+    else if (bookData.rating === "")
+      updatePromise = BookService.patchUpdate(id, { title: bookData.title });
+    else updatePromise = BookService.updateBook(id, bookData);
+
+    updatePromise
+      .then(() => {
+        console.log(updatePromise);
+        navigate("/");
+      })
       .catch((e) => console.log(e));
   }
   return (
@@ -47,19 +51,19 @@ const UpdateBook = () => {
                   <input
                     className="form-control"
                     type="text"
-                    value={new_title}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    placeholder={title}
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder={oldTitle}
                   />
                 </div>
                 <div className="form-group mb-2">
                   Rating:
                   <input
                     className="form-control"
-                    type="text"
-                    value={new_rating}
-                    onChange={(e) => setNewRating(e.target.value)}
-                    placeholder={rating}
+                    type="number"
+                    value={rating}
+                    onChange={(e) => setRating(e.target.value)}
+                    placeholder={oldRating}
                   />
                 </div>
                 <div className="btn-group me-2">
