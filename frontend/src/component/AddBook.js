@@ -39,7 +39,7 @@ const AddBook = () => {
                   Rating:
                   <input
                     className="form-control"
-                    type="text"
+                    type="number"
                     value={rating}
                     onChange={(e) => setRating(e.target.value)}
                     placeholder="Enter book rating"
