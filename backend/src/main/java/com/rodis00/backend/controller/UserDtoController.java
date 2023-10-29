@@ -3,6 +3,8 @@ package com.rodis00.backend.controller;
 import com.rodis00.backend.dto.UserDto;
 import com.rodis00.backend.exception.UserNotFoundException;
 import com.rodis00.backend.model.User;
+import com.rodis00.backend.model.UserProfile;
+import com.rodis00.backend.service.UserProfileService;
 import com.rodis00.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,12 +20,20 @@ public class UserDtoController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    UserProfileService userProfileService;
+
     @PostMapping("")
     public ResponseEntity<UserDto> addUser(@RequestBody User user) {
-        userService.addUser(user);
+        User newUser = userService.addUser(user);
+        UserProfile userProfile = userProfileService.addUserProfile(
+                new UserProfile()
+        );
+        newUser.setUserProfile(userProfile);
+        userService.addUser(newUser);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(UserDto.from(user));
+                .body(UserDto.from(newUser));
     }
 
     @GetMapping("")

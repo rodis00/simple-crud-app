@@ -6,18 +6,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Table(name = "custom_user")
-public class User {
+@Table(name = "user_profile")
+public class UserProfile {
 
     @Id
     @GeneratedValue
     private Long id;
-    private String email;
-    private String password;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_profile_id")
-    private UserProfile userProfile;
+    private String firstName;
+    private String lastName;
+    private int age;
 }
