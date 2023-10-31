@@ -1,6 +1,9 @@
 package com.rodis00.backend.controller;
 
 import com.rodis00.backend.dto.TokenReqResponse;
+import com.rodis00.backend.model.User;
+import com.rodis00.backend.service.AuthService;
+import com.rodis00.backend.service.UserService;
 import com.rodis00.backend.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,13 +13,18 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("auth")
 public class JwtController {
-
+    private final JwtTokenUtil jwtTokenUtil;
+    private final AuthService authService;
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    public JwtController(JwtTokenUtil jwtTokenUtil, AuthService authService) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.authService = authService;
+    }
 
     @PostMapping("/generate-token")
     public ResponseEntity<Object> generateToken(@RequestBody TokenReqResponse tokenReqResponse) {
-        if (tokenReqResponse.getEmail().equals("harry.potter@magic.com") && tokenReqResponse.getPassword().equals("password123")) {
+        User user = authService.authenticateUser(tokenReqResponse.getEmail(), tokenReqResponse.getPassword());
+        if (user != null) {
             String token = jwtTokenUtil.generateToken(tokenReqResponse.getEmail());
             TokenReqResponse tokenResponse = new TokenReqResponse();
             tokenResponse.setToken(token);

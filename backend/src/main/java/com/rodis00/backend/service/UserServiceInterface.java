@@ -9,4 +9,5 @@ public interface UserServiceInterface {
     User getUser(Long id);
     List<User> getUsers();
     User deleteUser(Long id);
+    User getUserByEmail(String email);
 }

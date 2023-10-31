@@ -7,9 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserProfileService implements UserProfileServiceInterface{
-    @Autowired
-    UserProfileRepository userProfileRepository;
+public class UserProfileService implements UserProfileServiceInterface {
+    private final UserProfileRepository userProfileRepository;
+
+    public UserProfileService(UserProfileRepository userProfileRepository) {
+        this.userProfileRepository = userProfileRepository;
+    }
+
     @Override
     public UserProfile addUserProfile(UserProfile userProfile) {
         return userProfileRepository.save(userProfile);

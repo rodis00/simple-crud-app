@@ -9,10 +9,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserService implements UserServiceInterface{
+public class UserService implements UserServiceInterface {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
     public User addUser(User user) {
         return userRepository.save(user);
@@ -34,5 +38,10 @@ public class UserService implements UserServiceInterface{
         User user = getUser(id);
         userRepository.delete(user);
         return user;
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
